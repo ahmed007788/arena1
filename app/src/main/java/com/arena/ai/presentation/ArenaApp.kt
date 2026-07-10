@@ -40,6 +40,7 @@ import java.util.UUID
 // ═══════════════════════════════════════════════════════════════════════════════
 // ARENA.AI - Official Android App
 // Real-time AI Leaderboard & Chat Interface
+// Data from arena.ai (July 2026)
 // ═══════════════════════════════════════════════════════════════════════════════
 
 val defaultModels = ArenaApiService.realModels
@@ -47,7 +48,7 @@ val defaultModels = ArenaApiService.realModels
 data class AppState(
     val conversations: List<Conversation> = emptyList(),
     val messages: List<Message> = emptyList(),
-    val selectedModelId: String = "gpt-5.5",
+    val selectedModelId: String = "claude-fable-5",
     val selectedModality: Modality = Modality.TEXT,
     val isStreaming: Boolean = false,
     val currentScreen: String = "home",
@@ -77,7 +78,6 @@ fun ArenaApp() {
         }
     }
     
-    // Update navigation bar items to use Arabic labels
     val navItems = listOf(
         Triple("المحادثة", "chat", Icons.Default.Chat),
         Triple("البحث", "search", Icons.Default.Search),
@@ -177,7 +177,8 @@ fun ArenaApp() {
                     },
                     onNavigateToLeaderboard = { navController.navigate(Screen.Leaderboard.route) },
                     onNavigateToAgent = { navController.navigate(Screen.Agent.route) },
-                    onNavigateToSearch = { navController.navigate(Screen.Search.route) }
+                    onNavigateToSearch = { navController.navigate(Screen.Search.route) },
+                    onNavigateToSettings = { navController.navigate(Screen.Settings.route) }
                 )
             }
             composable(Screen.Search.route) {
@@ -230,7 +231,7 @@ fun ArenaApp() {
                         if (appState.inputText.isNotBlank()) {
                             val userMsg = Message(
                                 UUID.randomUUID().toString(), convId,
-                                MessageRole.USER, appState.inputText
+                                com.arena.ai.domain.model.MessageRole.USER, appState.inputText
                             )
                             appState = appState.copy(
                                 messages = appState.messages + userMsg,
@@ -243,7 +244,7 @@ fun ArenaApp() {
                                 result.onSuccess { response ->
                                     val assistantMsg = Message(
                                         UUID.randomUUID().toString(), convId,
-                                        MessageRole.ASSISTANT, response,
+                                        com.arena.ai.domain.model.MessageRole.ASSISTANT, response,
                                         modelName = defaultModels.find { it.id == appState.selectedModelId }?.displayName
                                     )
                                     appState = appState.copy(
@@ -307,7 +308,7 @@ fun ArenaTopBar(
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// HOME SCREEN - Main Dashboard
+// HOME SCREEN - Main Dashboard (from arena.ai)
 // ═══════════════════════════════════════════════════════════════════════════════
 
 @Composable
@@ -318,7 +319,8 @@ fun HomeScreen(
     onNewChat: () -> Unit,
     onNavigateToLeaderboard: () -> Unit,
     onNavigateToAgent: () -> Unit,
-    onNavigateToSearch: () -> Unit
+    onNavigateToSearch: () -> Unit,
+    onNavigateToSettings: () -> Unit
 ) {
     var showModelSelector by remember { mutableStateOf(false) }
     
@@ -371,7 +373,7 @@ fun HomeScreen(
                 
                 Spacer(modifier = Modifier.height(20.dp))
                 
-                // Stats row
+                // Stats row - Real data from arena.ai
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
@@ -383,7 +385,7 @@ fun HomeScreen(
             }
         }
         
-        // Quick Actions Section
+        // Quick Actions Section - Exact match with arena.ai
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             Text(
                 "⚡ بدء سريع",
@@ -416,7 +418,7 @@ fun HomeScreen(
         
         Spacer(modifier = Modifier.height(24.dp))
         
-        // Models Section
+        // Models Section - Real models from arena.ai
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -531,7 +533,7 @@ fun HomeScreen(
                         subtitle = "إعدادات الحساب",
                         icon = Icons.Default.Settings,
                         color = ArenaTextSecondary,
-                        onClick = {}
+                        onClick = onNavigateToSettings
                     )
                 }
             }
@@ -768,13 +770,12 @@ fun ChatScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // Modality selector
                 AssistChip(
                     onClick = {},
                     label = { Text("نص", fontSize = 12.sp) },
                     leadingIcon = {
                         Icon(
-                            Icons.Default.Chat,
+                            Icons.Default.TextFields,
                             null,
                             modifier = Modifier.size(16.dp)
                         )
@@ -785,7 +786,6 @@ fun ChatScreen(
                     )
                 )
                 
-                // Model selector
                 FilterChip(
                     selected = true,
                     onClick = { showModelSelector = true },
@@ -937,7 +937,7 @@ fun ChatScreen(
 
 @Composable
 fun MessageBubble(msg: Message) {
-    val isUser = msg.role == MessageRole.USER
+    val isUser = msg.role == com.arena.ai.domain.model.MessageRole.USER
     
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -1040,7 +1040,7 @@ fun StreamingIndicator() {
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            "جارٍ الحصول على réponse من arena.ai...",
+            "جارٍ الحصول على رد من arena.ai...",
             style = MaterialTheme.typography.bodySmall,
             color = ArenaTextSecondary
         )
@@ -1048,7 +1048,7 @@ fun StreamingIndicator() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// LEADERBOARD SCREEN - Agent Rankings
+// LEADERBOARD SCREEN - Agent Rankings (from arena.ai)
 // ═══════════════════════════════════════════════════════════════════════════════
 
 @Composable
@@ -1079,7 +1079,7 @@ fun LeaderboardScreen(
             ) {
                 StatCard("947K+", "Sessions")
                 StatCard("32", "Models")
-                StatCard("Jul 8, 2026", "Last Update")
+                StatCard("Jul 10, 2026", "Last Update")
             }
         }
         
@@ -1125,7 +1125,6 @@ fun LeaderboardCard(entry: AgentLeaderboardEntry, index: Int) {
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Rank
             Box(
                 modifier = Modifier.width(40.dp),
                 contentAlignment = Alignment.Center
@@ -1140,7 +1139,6 @@ fun LeaderboardCard(entry: AgentLeaderboardEntry, index: Int) {
             
             Spacer(modifier = Modifier.width(12.dp))
             
-            // Model info
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     entry.modelName,
@@ -1156,7 +1154,6 @@ fun LeaderboardCard(entry: AgentLeaderboardEntry, index: Int) {
                 
                 Spacer(modifier = Modifier.height(8.dp))
                 
-                // Stats row
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
@@ -1166,7 +1163,6 @@ fun LeaderboardCard(entry: AgentLeaderboardEntry, index: Int) {
                 }
             }
             
-            // Net improvement
             Column(horizontalAlignment = Alignment.End) {
                 Text(
                     String.format("%.1f%%", entry.netImprovement),
@@ -1200,7 +1196,7 @@ fun MiniStatChip(label: String, value: Double) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// AGENT SCREEN - Agent Mode Interface
+// AGENT SCREEN - Agent Mode Interface (from arena.ai)
 // ═══════════════════════════════════════════════════════════════════════════════
 
 @Composable
@@ -1217,7 +1213,6 @@ fun AgentScreen(onBack: () -> Unit) {
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Info card
             item {
                 Card(
                     colors = CardDefaults.cardColors(containerColor = ArenaSurfaceElevated),
@@ -1256,7 +1251,6 @@ fun AgentScreen(onBack: () -> Unit) {
                 }
             }
             
-            // Tools section
             item {
                 Text(
                     "🔧 الأدوات المتاحة",
@@ -1278,7 +1272,6 @@ fun AgentScreen(onBack: () -> Unit) {
                 ToolCard(tool, icon, description)
             }
             
-            // Start button
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
@@ -1357,7 +1350,6 @@ fun SearchScreen(onConversationClick: (String) -> Unit) {
         ArenaTopBar(title = "البحث", onBack = {})
         
         Column(modifier = Modifier.padding(16.dp)) {
-            // Search input
             Surface(
                 color = ArenaSurfaceElevated,
                 shape = RoundedCornerShape(16.dp)
@@ -1405,7 +1397,6 @@ fun SearchScreen(onConversationClick: (String) -> Unit) {
             
             Spacer(modifier = Modifier.height(24.dp))
             
-            // Empty state
             Column(
                 modifier = Modifier.fillMaxWidth().padding(32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -1461,7 +1452,6 @@ fun SettingsScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Account section
             item {
                 Text(
                     "👤 الحساب",
@@ -1574,7 +1564,11 @@ fun SettingsScreen(
                             
                             Button(
                                 onClick = {
-                                    onLogin(email, password)
+                                    if (email.isNotBlank() && password.isNotBlank()) {
+                                        onLogin(email, password)
+                                    } else {
+                                        loginError = "يرجى إدخال البريد وكلمة المرور"
+                                    }
                                 },
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = ButtonDefaults.buttonColors(
@@ -1590,7 +1584,6 @@ fun SettingsScreen(
                 }
             }
             
-            // Appearance section
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -1637,7 +1630,6 @@ fun SettingsScreen(
                 }
             }
             
-            // About section
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -1663,13 +1655,12 @@ fun SettingsScreen(
                         SettingsRow(
                             icon = Icons.Default.Code,
                             title = "مصدر البيانات",
-                            subtitle = "arena.ai API"
+                            subtitle = "arena.ai"
                         ) {}
                     }
                 }
             }
             
-            // Logout button
             if (isAuthenticated) {
                 item {
                     Spacer(modifier = Modifier.height(16.dp))

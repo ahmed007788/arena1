@@ -24,9 +24,3 @@ data class OutputCapabilities(
     val text: Boolean,
     val image: Boolean?
 )
-
-enum class Modality {
-    TEXT,
-    IMAGE,
-    VIDEO
-}
