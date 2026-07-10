@@ -498,7 +498,9 @@ fun HomeScreen(
                 columns = GridCells.Fixed(2),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.height(200.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp)
             ) {
                 item {
                     NavCard(
