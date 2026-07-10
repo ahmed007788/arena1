@@ -1,71 +1,64 @@
 package com.arena.ai.data.remote
 
 import kotlinx.coroutines.delay
-import java.util.UUID
-import com.arena.ai.domain.model.*
 
-/**
- * Real API service for Arena.ai
- * Data from arena.ai (July 2026)
- * https://arena.ai/leaderboard
- */
-
-// Real models from arena.ai Leaderboard
-val realModels = listOf(
-    // Agent Arena Top Models
-    AIModel("claude-fable-5", "anthropic", "Anthropic", "Claude Fable 5", "claude-fable-5", "Claude Fable 5", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("claude-opus-4-8-thinking", "anthropic", "Anthropic", "Claude Opus 4.8 (Thinking)", "claude-opus-4-8-thinking", "Opus 4.8", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("claude-opus-4-7-thinking", "anthropic", "Anthropic", "Claude Opus 4.7 (Thinking)", "claude-opus-4-7-thinking", "Opus 4.7", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("claude-opus-4-7", "anthropic", "Anthropic", "Claude Opus 4.7", "claude-opus-4-7", "Opus 4.7", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("claude-sonnet-5-high", "anthropic", "Anthropic", "Claude Sonnet 5 (High)", "claude-sonnet-5-high", "Sonnet 5", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("claude-opus-4-6", "anthropic", "Anthropic", "Claude Opus 4.6", "claude-opus-4-6", "Opus 4.6", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("claude-opus-4-6-thinking", "anthropic", "Anthropic", "Claude Opus 4.6 Thinking", "claude-opus-4-6-thinking", "Opus 4.6 Th", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("claude-sonnet-4-6", "anthropic", "Anthropic", "Claude Sonnet 4.6", "claude-sonnet-4-6", "Sonnet 4.6", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("claude-opus-4-8", "anthropic", "Anthropic", "Claude Opus 4.8", "claude-opus-4-8", "Opus 4.8", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    
-    // OpenAI Models
-    AIModel("gpt-5.5-xhigh", "openai", "OpenAI", "GPT-5.5 (xHigh)", "gpt-5.5-xhigh", "GPT-5.5 xH", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("gpt-5.5-high", "openai", "OpenAI", "GPT-5.5 (High)", "gpt-5.5-high", "GPT-5.5 H", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("gpt-5.4-high", "openai", "OpenAI", "GPT-5.4 (High)", "gpt-5.4-high", "GPT-5.4 H", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("gpt-5.5", "openai", "OpenAI", "GPT-5.5", "gpt-5.5", "GPT-5.5", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("gpt-5.4", "openai", "OpenAI", "GPT-5.4", "gpt-5.4", "GPT-5.4", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    
-    // Google Models
-    AIModel("gemini-3.1-pro-preview", "google", "Google", "Gemini 3.1 Pro Preview", "gemini-3.1-pro-preview", "Gemini 3.1", ModelCapabilities(InputCapabilities(true, true), OutputCapabilities(true, true))),
-    AIModel("gemini-3.5-flash-high", "google", "Google", "Gemini 3.5 Flash (High)", "gemini-3.5-flash-high", "Gemini 3.5", ModelCapabilities(InputCapabilities(true, true), OutputCapabilities(true, true))),
-    AIModel("gemini-3-flash", "google", "Google", "Gemini 3 Flash", "gemini-3-flash", "Gemini 3", ModelCapabilities(InputCapabilities(true, true), OutputCapabilities(true, true))),
-    AIModel("gemma-4-31b", "google", "Google", "Gemma 4 31B", "gemma-4-31b", "Gemma 4", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    
-    // xAI Models
-    AIModel("grok-4.3", "xai", "xAI", "Grok 4.3", "grok-4.3", "Grok 4.3", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("grok-4.3-high", "xai", "xAI", "Grok 4.3 (High)", "grok-4.3-high", "Grok 4.3 H", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    
-    // DeepSeek Models
-    AIModel("deepseek-v4-pro", "deepseek", "DeepSeek", "DeepSeek V4 Pro", "deepseek-v4-pro", "DeepSeek V4", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("deepseek-v4-flash", "deepseek", "DeepSeek", "DeepSeek V4 Flash", "deepseek-v4-flash", "DeepSeek V4F", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    
-    // Z.ai Models
-    AIModel("glm-5.2-max", "z-ai", "Z.ai", "GLM 5.2 (Max)", "glm-5.2-max", "GLM 5.2", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("glm-5.1", "z-ai", "Z.ai", "GLM 5.1", "glm-5.1", "GLM 5.1", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    
-    // Alibaba Models
-    AIModel("qwen3.7-max", "alibaba", "Alibaba", "Qwen3.7 Max", "qwen3.7-max", "Qwen 3.7", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("qwen3.7-plus", "alibaba", "Alibaba", "Qwen3.7 Plus", "qwen3.7-plus", "Qwen 3.7+", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    
-    // Moonshot Models
-    AIModel("kimi-k2.7-code", "moonshot", "Moonshot", "Kimi K2.7 Code", "kimi-k2.7-code", "Kimi K2.7", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("kimi-k2.6", "moonshot", "Moonshot", "Kimi K2.6", "kimi-k2.6", "Kimi K2.6", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    
-    // MiniMax Models
-    AIModel("minimax-m3", "minimax", "MiniMax", "MiniMax M3", "minimax-m3", "MiniMax M3", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("minimax-m2.7", "minimax", "MiniMax", "MiniMax M2.7", "minimax-m2.7", "MiniMax M2.7", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    
-    // Other Models
-    AIModel("mimo-v2.5-pro", "xiaomi", "Xiaomi", "Mimo V2.5 Pro", "mimo-v2.5-pro", "Mimo V2.5", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true))),
-    AIModel("nemotron-3-ultra", "nvidia", "Nvidia", "Nemotron 3 Ultra", "nemotron-3-ultra", "Nemotron", ModelCapabilities(InputCapabilities(true, null), OutputCapabilities(true, true)))
+data class AIModel(
+    val id: String,
+    val provider: String,
+    val organization: String,
+    val displayName: String,
+    val modelId: String,
+    val shortName: String
 )
 
-// Real Agent Leaderboard data from arena.ai
+data class AgentLeaderboardEntry(
+    val rank: Int,
+    val modelName: String,
+    val lab: String,
+    val netImprovement: Double,
+    val confirmedSuccess: Double,
+    val praiseVsComplaint: Double,
+    val steerability: Double,
+    val bashRecovery: Double,
+    val toolHallucination: Double,
+    val sessions: Int
+)
+
+val realModels = listOf(
+    AIModel("claude-fable-5", "anthropic", "Anthropic", "Claude Fable 5", "claude-fable-5", "Claude Fable 5"),
+    AIModel("claude-opus-4-8-thinking", "anthropic", "Anthropic", "Claude Opus 4.8 (Thinking)", "claude-opus-4-8-thinking", "Opus 4.8"),
+    AIModel("claude-opus-4-7-thinking", "anthropic", "Anthropic", "Claude Opus 4.7 (Thinking)", "claude-opus-4-7-thinking", "Opus 4.7"),
+    AIModel("claude-opus-4-7", "anthropic", "Anthropic", "Claude Opus 4.7", "claude-opus-4-7", "Opus 4.7"),
+    AIModel("claude-sonnet-5-high", "anthropic", "Anthropic", "Claude Sonnet 5 (High)", "claude-sonnet-5-high", "Sonnet 5"),
+    AIModel("claude-opus-4-6", "anthropic", "Anthropic", "Claude Opus 4.6", "claude-opus-4-6", "Opus 4.6"),
+    AIModel("claude-opus-4-6-thinking", "anthropic", "Anthropic", "Claude Opus 4.6 Thinking", "claude-opus-4-6-thinking", "Opus 4.6 Th"),
+    AIModel("claude-sonnet-4-6", "anthropic", "Anthropic", "Claude Sonnet 4.6", "claude-sonnet-4-6", "Sonnet 4.6"),
+    AIModel("claude-opus-4-8", "anthropic", "Anthropic", "Claude Opus 4.8", "claude-opus-4-8", "Opus 4.8"),
+    AIModel("gpt-5.5-xhigh", "openai", "OpenAI", "GPT-5.5 (xHigh)", "gpt-5.5-xhigh", "GPT-5.5 xH"),
+    AIModel("gpt-5.5-high", "openai", "OpenAI", "GPT-5.5 (High)", "gpt-5.5-high", "GPT-5.5 H"),
+    AIModel("gpt-5.4-high", "openai", "OpenAI", "GPT-5.4 (High)", "gpt-5.4-high", "GPT-5.4 H"),
+    AIModel("gpt-5.5", "openai", "OpenAI", "GPT-5.5", "gpt-5.5", "GPT-5.5"),
+    AIModel("gpt-5.4", "openai", "OpenAI", "GPT-5.4", "gpt-5.4", "GPT-5.4"),
+    AIModel("gemini-3.1-pro-preview", "google", "Google", "Gemini 3.1 Pro Preview", "gemini-3.1-pro-preview", "Gemini 3.1"),
+    AIModel("gemini-3.5-flash-high", "google", "Google", "Gemini 3.5 Flash (High)", "gemini-3.5-flash-high", "Gemini 3.5"),
+    AIModel("gemini-3-flash", "google", "Google", "Gemini 3 Flash", "gemini-3-flash", "Gemini 3"),
+    AIModel("gemma-4-31b", "google", "Google", "Gemma 4 31B", "gemma-4-31b", "Gemma 4"),
+    AIModel("grok-4.3", "xai", "xAI", "Grok 4.3", "grok-4.3", "Grok 4.3"),
+    AIModel("grok-4.3-high", "xai", "xAI", "Grok 4.3 (High)", "grok-4.3-high", "Grok 4.3 H"),
+    AIModel("deepseek-v4-pro", "deepseek", "DeepSeek", "DeepSeek V4 Pro", "deepseek-v4-pro", "DeepSeek V4"),
+    AIModel("deepseek-v4-flash", "deepseek", "DeepSeek", "DeepSeek V4 Flash", "deepseek-v4-flash", "DeepSeek V4F"),
+    AIModel("glm-5.2-max", "z-ai", "Z.ai", "GLM 5.2 (Max)", "glm-5.2-max", "GLM 5.2"),
+    AIModel("glm-5.1", "z-ai", "Z.ai", "GLM 5.1", "glm-5.1", "GLM 5.1"),
+    AIModel("qwen3.7-max", "alibaba", "Alibaba", "Qwen3.7 Max", "qwen3.7-max", "Qwen 3.7"),
+    AIModel("qwen3.7-plus", "alibaba", "Alibaba", "Qwen3.7 Plus", "qwen3.7-plus", "Qwen 3.7+"),
+    AIModel("kimi-k2.7-code", "moonshot", "Moonshot", "Kimi K2.7 Code", "kimi-k2.7-code", "Kimi K2.7"),
+    AIModel("kimi-k2.6", "moonshot", "Moonshot", "Kimi K2.6", "kimi-k2.6", "Kimi K2.6"),
+    AIModel("minimax-m3", "minimax", "MiniMax", "MiniMax M3", "minimax-m3", "MiniMax M3"),
+    AIModel("minimax-m2.7", "minimax", "MiniMax", "MiniMax M2.7", "minimax-m2.7", "MiniMax M2.7"),
+    AIModel("mimo-v2.5-pro", "xiaomi", "Xiaomi", "Mimo V2.5 Pro", "mimo-v2.5-pro", "Mimo V2.5"),
+    AIModel("nemotron-3-ultra", "nvidia", "Nvidia", "Nemotron 3 Ultra", "nemotron-3-ultra", "Nemotron")
+)
+
 val realAgentLeaderboard = listOf(
     AgentLeaderboardEntry(1, "Claude Fable 5 (High)", "Anthropic", 14.10, 16.88, 30.94, 12.56, 8.91, 1.24, 16059),
     AgentLeaderboardEntry(2, "Claude Opus 4.8 (Thinking)", "Anthropic", 9.76, 8.28, 18.04, 11.77, 10.03, 0.70, 32490),
@@ -105,29 +98,28 @@ object ArenaApiService {
     
     private const val BASE_URL = "https://arena.ai"
     
-    // Simulated chat responses (in real app would call arena.ai API)
     suspend fun sendMessage(modelId: String, message: String): Result<String> {
         delay(1000)
-        return Result.success(generateResponse(message, modelId))
+        val model = realModels.find { it.id == modelId }
+        return Result.success(generateResponse(message, model))
     }
     
-    private fun generateResponse(message: String, modelId: String): String {
-        val model = realModels.find { it.id == modelId }
+    private fun generateResponse(message: String, model: AIModel?): String {
         return when {
             message.contains("hello", ignoreCase = true) || message.contains("hi", ignoreCase = true) ->
                 "Hello! I'm ${model?.displayName ?: "AI"} from arena.ai. How can I help you today?"
             message.contains("who are you", ignoreCase = true) ->
-                "I'm an AI assistant powered by ${model?.provider ?: "various AI models"} from arena.ai's official leaderboard. I can help with coding, writing, research, and much more!"
+                "I'm an AI assistant powered by ${model?.provider ?: "various AI models"} from arena.ai's official leaderboard."
             message.contains("help", ignoreCase = true) ->
-                "I can help you with:\n• Writing and editing code\n• Answering questions\n• Research and analysis\n• Creative writing\n• Problem solving\n• And much more!\n\nData from arena.ai leaderboard ensures I'm using the latest AI models."
+                "I can help with: Writing code, Answering questions, Research, Creative writing, Problem solving."
             message.contains("thanks", ignoreCase = true) || message.contains("thank you", ignoreCase = true) ->
-                "You're welcome! Is there anything else I can help you with?"
+                "You're welcome!"
             message.contains("bye", ignoreCase = true) ->
-                "Goodbye! Have a great day!"
+                "Goodbye!"
             message.contains("leaderboard", ignoreCase = true) ->
-                "Current arena.ai Agent Arena rankings:\n\n🥇 Claude Fable 5 (High) - Anthropic - 14.10%\n🥈 Claude Opus 4.8 (Thinking) - 9.76%\n🥉 GPT 5.5 (xHigh) - OpenAI - 8.90%\n\nVisit arena.ai for the full rankings!"
+                "Top 3 on arena.ai:\n🥇 Claude Fable 5 - Anthropic - 14.10%\n🥈 Claude Opus 4.8 - 9.76%\n🥉 GPT 5.5 - OpenAI - 8.90%"
             else ->
-                "I understand you're asking about: \"$message\"\n\nAs an AI assistant from arena.ai, I can help with various tasks. The current top model is Claude Fable 5 with 14.10% improvement rate. Feel free to ask me anything!"
+                "I understand you're asking about: \"$message\"\n\nAs an AI from arena.ai, feel free to ask anything!"
         }
     }
     
@@ -141,7 +133,6 @@ object ArenaApiService {
         return Result.success(realModels)
     }
     
-    // User session management
     var currentUser: String? = null
     var isAuthenticated: Boolean = false
     
@@ -160,16 +151,3 @@ object ArenaApiService {
         isAuthenticated = false
     }
 }
-
-data class AgentLeaderboardEntry(
-    val rank: Int,
-    val modelName: String,
-    val lab: String,
-    val netImprovement: Double,
-    val confirmedSuccess: Double,
-    val praiseVsComplaint: Double,
-    val steerability: Double,
-    val bashRecovery: Double,
-    val toolHallucination: Double,
-    val sessions: Int
-)

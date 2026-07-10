@@ -1,8 +1,9 @@
 package com.arena.ai.domain.model
 
-import kotlinx.serialization.Serializable
+enum class MessageRole { USER, ASSISTANT, SYSTEM }
+enum class Modality { TEXT, CODE, SEARCH, IMAGE, MULTIMODAL }
+enum class ChatMode { NORMAL, BATTLE, AGENT }
 
-@Serializable
 data class Conversation(
     val id: String,
     val title: String,
@@ -14,11 +15,9 @@ data class Conversation(
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
     val isPinned: Boolean = false,
-    val isArchived: Boolean = false,
-    val tags: List<String> = emptyList()
+    val isArchived: Boolean = false
 )
 
-@Serializable
 data class Message(
     val id: String,
     val conversationId: String,
@@ -26,31 +25,16 @@ data class Message(
     val content: String,
     val modelId: String? = null,
     val modelName: String? = null,
-    val attachments: List<Attachment> = emptyList(),
     val createdAt: Long = System.currentTimeMillis(),
     val isStreaming: Boolean = false,
     val error: String? = null
 )
 
-@Serializable
-enum class MessageRole { USER, ASSISTANT, SYSTEM }
-
-@Serializable
-enum class Modality { TEXT, CODE, SEARCH, IMAGE, MULTIMODAL }
-
-@Serializable
-enum class ChatMode { NORMAL, BATTLE, AGENT }
-
-@Serializable
-data class Attachment(
+data class AIModel(
     val id: String,
-    val type: AttachmentType,
-    val url: String? = null,
-    val localPath: String? = null,
-    val name: String? = null,
-    val mimeType: String? = null,
-    val size: Long = 0
+    val provider: String,
+    val organization: String,
+    val displayName: String,
+    val modelId: String,
+    val shortName: String
 )
-
-@Serializable
-enum class AttachmentType { IMAGE, FILE, CODE }

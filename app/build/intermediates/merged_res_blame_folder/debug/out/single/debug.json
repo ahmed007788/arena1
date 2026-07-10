@@ -1,0 +1,50 @@
+[
+    {
+        "merged": "com.arena.ai.app-merged_res-47:/mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "com.arena.ai.app-main-49:/mipmap-xhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.arena.ai.app-merged_res-47:/mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "com.arena.ai.app-main-49:/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.arena.ai.app-merged_res-47:/mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "com.arena.ai.app-main-49:/mipmap-hdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.arena.ai.app-merged_res-47:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "com.arena.ai.app-main-49:/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.arena.ai.app-merged_res-47:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "com.arena.ai.app-main-49:/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.arena.ai.app-merged_res-47:/xml_data_extraction_rules.xml.flat",
+        "source": "com.arena.ai.app-main-49:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.arena.ai.app-merged_res-47:/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "com.arena.ai.app-main-49:/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.arena.ai.app-merged_res-47:/mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "com.arena.ai.app-main-49:/mipmap-xxxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.arena.ai.app-merged_res-47:/mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "com.arena.ai.app-main-49:/mipmap-xxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.arena.ai.app-merged_res-47:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "com.arena.ai.app-main-49:/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.arena.ai.app-merged_res-47:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "com.arena.ai.app-main-49:/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.arena.ai.app-merged_res-47:/xml_backup_rules.xml.flat",
+        "source": "com.arena.ai.app-main-49:/xml/backup_rules.xml"
+    }
+]

@@ -1,0 +1,20 @@
+R_DEF: Internal format may change without notice
+local
+color black
+color purple_200
+color purple_500
+color purple_700
+color teal_200
+color teal_700
+color white
+mipmap ic_launcher
+mipmap ic_launcher_round
+string agent_mode
+string app_name
+string leaderboard
+string new_chat
+string search
+string settings
+style Theme.ArenaAI
+xml backup_rules
+xml data_extraction_rules

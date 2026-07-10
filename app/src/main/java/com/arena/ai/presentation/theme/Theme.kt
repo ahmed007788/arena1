@@ -1,46 +1,36 @@
 package com.arena.ai.presentation.theme
 
-import android.app.Activity
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
+import androidx.compose.ui.graphics.Color
+
+val ArenaBackground = Color(0xFF0A0A0A)
+val ArenaSurface = Color(0xFF121212)
+val ArenaSurfaceElevated = Color(0xFF1A1A1A)
+val ArenaSurfaceTertiary = Color(0xFF242424)
+val ArenaBorder = Color(0xFF2A2A2A)
+val ArenaTextPrimary = Color(0xFFFFFFFF)
+val ArenaTextSecondary = Color(0xFFB0B0B0)
+val ArenaTextTertiary = Color(0xFF666666)
+val ArenaAccentPrimary = Color(0xFF10B981)
+val ArenaAccentSecondary = Color(0xFF6366F1)
+val ArenaAccentWarning = Color(0xFFF59E0B)
+val ArenaAccentError = Color(0xFFEF4444)
+val ArenaSidebarBackground = Color(0xFF0F0F0F)
 
 private val DarkColorScheme = darkColorScheme(
     primary = ArenaAccentPrimary,
-    onPrimary = ArenaBackground,
-    primaryContainer = ArenaAccentPrimary.copy(alpha = 0.2f),
-    onPrimaryContainer = ArenaAccentPrimary,
     secondary = ArenaAccentSecondary,
-    onSecondary = ArenaBackground,
     background = ArenaBackground,
+    surface = ArenaSurfaceElevated,
+    onPrimary = ArenaBackground,
+    onSecondary = ArenaTextPrimary,
     onBackground = ArenaTextPrimary,
-    surface = ArenaSurface,
-    onSurface = ArenaTextPrimary,
-    surfaceVariant = ArenaSurfaceElevated,
-    onSurfaceVariant = ArenaTextSecondary,
-    outline = ArenaBorder,
-    error = ArenaAccentError,
-    onError = ArenaBackground
+    onSurface = ArenaTextPrimary
 )
 
 @Composable
-fun ArenaTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
-) {
-    val colorScheme = DarkColorScheme
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.background.toArgb()
-            window.navigationBarColor = colorScheme.background.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
-        }
-    }
-    MaterialTheme(colorScheme = colorScheme, content = content)
+fun ArenaTheme(content: @Composable () -> Unit) {
+    MaterialTheme(colorScheme = DarkColorScheme, content = content)
 }
