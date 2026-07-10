@@ -14,9 +14,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Install splash screen
         installSplashScreen()
+        
         super.onCreate(savedInstanceState)
+        
+        // Enable edge-to-edge display
         enableEdgeToEdge()
+        
         setContent {
             ArenaTheme(darkTheme = true) {
                 Surface(modifier = Modifier.fillMaxSize()) {
